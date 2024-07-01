@@ -1,0 +1,36 @@
+require:
+  - rubocop-rails
+AllCops:
+  Exclude:
+    - db/schema.rb
+    - db/migrate/*
+    - vendor/**/*
+    - config/**/*
+    - bin/**/*
+
+  NewCops: enable
+Metrics/BlockLength:
+  Exclude:
+    - Rakefile
+    - '**/*.rake'
+    - 'file_to_exclude.rb'
+  Max: 70
+Metrics/AbcSize:
+  Max: 50
+Metrics/CyclomaticComplexity:
+  Max: 10
+Metrics/PerceivedComplexity:
+  Max: 10
+Style/ClassAndModuleChildren:
+  Exclude:
+    - 'test/channels/application_cable/connection_test.rb'
+    - 'test/test_helper.rb'
+Style/Documentation:
+  Exclude:
+    - 'app/**/*.rb'
+ClassLength:
+  Max: 100
+Metrics/MethodLength:
+  Max: 10
+Metrics/LineLength:
+  Max: 140
