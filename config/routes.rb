@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1, defaults: { format: :json } do
       resources :orders, only: %i[index show destroy create]
+      resources :items, only: %i[index]
     end
   end
 end

@@ -59,12 +59,12 @@ module Api
       end
 
       def serialize_data
-        serialized_data = ActiveModelSerializers::SerializableResource.new(collection, each_serializer: serializer)
-        { results: serialized_data }
+        serialized_data = serializer.new(collection)
+        { results: serialized_data.serializable_hash }
       end
 
       def serializer
-        "Api::V1::#{model}Serializer".constantize
+        "Api::V1::#{controller_name.classify}Serializer".constantize
       end
     end
   end

@@ -5,8 +5,9 @@ class Order < ApplicationRecord
 
   belongs_to :user
 
-  enum status: { created: 0, paid: 1, notified: 2, completed: 3, rejected: 4 }
+  enum status: { paid: 0, notified: 1, completed: 2, rejected: 3 }
   before_save :calculate_cost
+  after_save :notify_user
   accepts_nested_attributes_for :order_items_deals
 
   def calculate_cost
@@ -21,6 +22,10 @@ class Order < ApplicationRecord
     self.total = total
   end
 
+  def notify_user
+    NotificationJob.set(wait: 30.minutes).perform_later(id)
+  end
+
   private
 
   def calculate_deal_cost(ordered_item_deal)
@@ -29,9 +34,9 @@ class Order < ApplicationRecord
       deal_total += if deal_item.is_free
                       0
                     elsif deal_item.discount_percentage
-                      deal_item.item.price * (1 - (deal_item.discount_percentage / 100.0))
+                      (deal_item.item.price * (1 - (deal_item.discount_percentage / 100.0))) + deal_item.item.tax
                     else
-                      deal_item.item.price
+                      deal_item.item.price + deal_item.item.tax
                     end
     end
     deal_total *= ordered_item_deal.quantity
